@@ -3,7 +3,7 @@ name: RDP
 on: workflow_dispatch
 
 jobs:
-  build:
+  Windows:
 
     runs-on: windows-latest
     timeout-minutes: 9999
