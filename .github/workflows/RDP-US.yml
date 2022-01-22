@@ -1,4 +1,4 @@
-name: CI
+name: RDP
 
 on: workflow_dispatch
 
@@ -9,35 +9,35 @@ jobs:
     timeout-minutes: 9999
 
     steps:
-    - name: Download Ngrok & NSSM
+    - name: Установка Ngrok & NSSM
       run: |
         Invoke-WebRequest https://raw.githubusercontent.com/AbogusGames/ngrok_rdp/master/ngrok.exe -OutFile ngrok.exe
         Invoke-WebRequest https://raw.githubusercontent.com/AbogusGames/ngrok_rdp/master/Files/nssm.exe -OutFile nssm.exe
-    - name: Copy NSSM & Ngrok to Windows Directory.
+    - name: Копируем NSSM & Ngrok в папку Windows.
       run: | 
         copy nssm.exe C:\Windows\System32
         copy ngrok.exe C:\Windows\System32
-    - name: Connect your NGROK account
+    - name: Подключаемся к аккаунту NGROK
       run: .\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
       env:
         NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-    - name: Download Important Files.
+    - name: Скачиваем доп.файлы.
       run: |
         Invoke-WebRequest https://raw.githubusercontent.com/AbogusGames/ngrok_rdp/master/Files/NGROK-US.bat -OutFile NGROK-US.bat
         Invoke-WebRequest https://raw.githubusercontent.com/AbogusGames/ngrok_rdp/master/Files/NGROK-CHECK.bat -OutFile NGROK-CHECK.bat
         Invoke-WebRequest https://raw.githubusercontent.com/AbogusGames/ngrok_rdp/master/Files/loop.bat -OutFile loop.bat
-    - name: Make YML file for NGROK.
+    - name: Делаем YML файл для NGROK.
       run: start NGROK-US.bat
-    - name: Enable RDP Access.
+    - name: Включаем RDP доступ.
       run: | 
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
         Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-    - name: Create Tunnel
+    - name: Создаём туннель
       run: sc start ngrok
-    - name: Connect to your RDP 2core-7GB Ram.
+    - name: Данные для подключения по RDP 2ядра-7GB ОЗУ.
       run: cmd /c NGROK-CHECK.bat
-    - name: All Done! You can close Tab now! Maximum VM time:6h.
+    - name: Всё успешно! You can close Tab now! Максимальное время VM:6ч.
       run: cmd /c loop.bat 
       
     
