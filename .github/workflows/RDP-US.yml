@@ -5,7 +5,7 @@ on: workflow_dispatch
 jobs:
   Windows:
 
-    runs-on: windows-latest
+    runs-on: linux-latest
     timeout-minutes: 999999
 
     steps:
